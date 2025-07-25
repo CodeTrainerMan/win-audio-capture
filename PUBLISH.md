@@ -55,7 +55,7 @@ npm login
 
 2. **检查 npm 配置**
 ```bash
-npm whoami
+npm whoami 
 # 应该显示你的 npm 用户名
 ```
 

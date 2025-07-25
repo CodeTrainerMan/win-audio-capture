@@ -17,7 +17,7 @@ class AudioCapture {
         const devices = [];
         const lines = stderr.split('\n');
         let foundAudioSection = false;
-        
+
         for (const line of lines) {
           // Find lines containing audio device information
           // Format: [dshow @ xxxxxxxx] "device_name" (audio)
@@ -28,7 +28,7 @@ class AudioCapture {
             let deviceType = 'microphone';
             let isRecommended = false;
             let priority = 0;
-            
+
             if (deviceName.includes('立体声混音') || deviceName.includes('Stereo Mix')) {
               deviceType = 'stereo_mix';
               isRecommended = true;
@@ -40,7 +40,7 @@ class AudioCapture {
               deviceType = 'default';
               priority = 3;
             }
-            
+
             const device = {
               name: deviceName,
               type: 'audio',
@@ -50,16 +50,16 @@ class AudioCapture {
               channels: [1, 2],
               bitDepths: [16, 24],
               isRecommended: isRecommended,
-              priority: priority
+              priority: priority,
             };
             devices.push(device);
             foundAudioSection = true;
           }
         }
-        
+
         // If no devices found, provide fallback devices
         if (devices.length === 0) {
-          
+
           devices.push({
             name: '立体声混音 (Realtek High Definition Audio)',
             type: 'audio',
@@ -67,7 +67,7 @@ class AudioCapture {
             sampleRates: [44100, 48000, 96000],
             channels: [1, 2],
             bitDepths: [16, 24],
-            isDefault: true
+            isDefault: true,
           });
           devices.push({
             name: 'default',
@@ -76,17 +76,17 @@ class AudioCapture {
             sampleRates: [44100, 48000, 96000],
             channels: [1, 2],
             bitDepths: [16, 24],
-            isDefault: true
+            isDefault: true,
           });
         }
-        
+
         // Ensure all devices have necessary properties
         devices.forEach(device => {
           if (!device.sampleRates) device.sampleRates = [44100, 48000, 96000];
           if (!device.channels) device.channels = [1, 2];
           if (!device.bitDepths) device.bitDepths = [16, 24];
         });
-        
+
         resolve(devices);
       });
     });
@@ -103,7 +103,7 @@ class AudioCapture {
       channels = 2,
       bitDepth = 16,
       outputPath = null,
-      onData = null
+      onData = null,
     } = options;
 
     this.isCapturing = true;
@@ -117,7 +117,7 @@ class AudioCapture {
         '-ar', sampleRate.toString(),
         '-ac', channels.toString(),
         '-f', 'wav',
-        'pipe:1'
+        'pipe:1',
       ];
 
       this.ffmpegProcess = spawn('ffmpeg', ffmpegArgs, { stdio: ['ignore', 'pipe', 'pipe'] });
@@ -204,7 +204,7 @@ class AudioCapture {
     return {
       size: data.length,
       duration: this.calculateDuration(data),
-      format: 'WAV'
+      format: 'WAV',
     };
   }
 
@@ -223,7 +223,7 @@ class AudioCapture {
 
     // Sort by priority
     const sortedDevices = devices.sort((a, b) => a.priority - b.priority);
-    
+
     // Return first recommended device or first device
     const recommended = sortedDevices.find(device => device.isRecommended);
     if (recommended) {
@@ -234,4 +234,4 @@ class AudioCapture {
   }
 }
 
-module.exports = AudioCapture; 
+module.exports = AudioCapture;

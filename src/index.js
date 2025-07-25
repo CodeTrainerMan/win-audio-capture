@@ -106,8 +106,8 @@ module.exports = {
   WinAudioCapture,
   AudioCapture,
   AudioDevice,
-  AudioProcessor
+  AudioProcessor,
 };
 
 // 默认导出
-module.exports.default = WinAudioCapture; 
+module.exports.default = WinAudioCapture;

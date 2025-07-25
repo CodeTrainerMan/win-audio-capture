@@ -28,6 +28,8 @@ npm install win-audio-capture
 yarn add win-audio-capture
 ```
 
+> **Note**: This package includes source code directly. Users can view and modify the source code in the `src/` directory.
+
 ## Prerequisites
 
 - **Windows OS**: This library is designed for Windows systems

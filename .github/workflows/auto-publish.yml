@@ -1,0 +1,127 @@
+name: Auto Build and Publish
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - 'README.md'
+      - 'README.zh-CN.md'
+      - 'docs/**'
+  workflow_dispatch:
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        registry-url: 'https://registry.npmjs.org'
+        
+    - name: Setup Yarn
+      uses: actions/setup-node@v4
+      with:
+        cache: 'yarn'
+        
+    - name: Install dependencies
+      run: yarn install --frozen-lockfile
+      
+    - name: Run linting
+      run: yarn lint
+      
+    - name: Run tests
+      run: yarn test
+      
+    - name: Check if version exists
+      id: check_version
+      run: |
+        CURRENT_VERSION=$(node -p "require('./package.json').version")
+        echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+        
+        # Check if this version already exists on npm
+        if npm view win-audio-capture@$CURRENT_VERSION version >/dev/null 2>&1; then
+          echo "version_exists=true" >> $GITHUB_OUTPUT
+          echo "Version $CURRENT_VERSION already exists on npm"
+        else
+          echo "version_exists=false" >> $GITHUB_OUTPUT
+          echo "Version $CURRENT_VERSION is new"
+        fi
+        
+    - name: Publish to npm
+      if: steps.check_version.outputs.version_exists == 'false'
+      run: npm publish
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        
+    - name: Create Git tag
+      if: steps.check_version.outputs.version_exists == 'false'
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git tag -a "v${{ steps.check_version.outputs.current_version }}" -m "Release v${{ steps.check_version.outputs.current_version }}"
+        git push origin "v${{ steps.check_version.outputs.current_version }}"
+        
+    - name: Create GitHub Release
+      if: steps.check_version.outputs.version_exists == 'false'
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: "v${{ steps.check_version.outputs.current_version }}"
+        release_name: "Release v${{ steps.check_version.outputs.current_version }}"
+        body: |
+          ## 🎉 New Release: v${{ steps.check_version.outputs.current_version }}
+          
+          ### 📦 What's New
+          - Windows Desktop Audio Capture JavaScript Plugin Library
+          - Real-time audio processing capabilities
+          - Alibaba Cloud ASR integration
+          - Device detection and recommendation
+          - Optimized device selection
+          - Bilingual documentation (English/Chinese)
+          
+          ### 🚀 Installation
+          ```bash
+          npm install win-audio-capture
+          # or
+          yarn add win-audio-capture
+          ```
+          
+          ### 📚 Documentation
+          - [GitHub Repository](https://github.com/CodeTrainerMan/win-audio-capture)
+          - [npm Package](https://www.npmjs.com/package/win-audio-capture)
+          - [GitHub Pages](https://CodeTrainerMan.github.io/win-audio-capture/)
+          
+          ### 🔧 Usage
+          ```javascript
+          const { WinAudioCapture } = require('win-audio-capture');
+          
+          const audioCapture = new WinAudioCapture();
+          const devices = await audioCapture.getDevices();
+          ```
+          
+          ### 🛠️ Features
+          - ✅ Windows desktop audio capture
+          - ✅ Real-time audio streaming
+          - ✅ Device detection and recommendation
+          - ✅ Audio processing (normalize, trim, fade)
+          - ✅ Alibaba Cloud ASR integration
+          - ✅ Dynamic token acquisition
+          - ✅ Bilingual documentation
+          - ✅ GitHub Actions automation
+        draft: false
+        prerelease: false
+        
+    - name: Skip publish (version exists)
+      if: steps.check_version.outputs.version_exists == 'true'
+      run: |
+        echo "Version ${{ steps.check_version.outputs.current_version }} already exists on npm, skipping publish"
+        echo "To publish a new version, update the version in package.json" 

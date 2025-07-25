@@ -54,7 +54,7 @@ class AudioProcessor {
   normalize(audioData, options = {}) {
     const { targetLevel = -3 } = options;
     const samples = this.bufferToSamples(audioData);
-    
+
     // Find maximum amplitude
     let maxAmplitude = 0;
     for (let i = 0; i < samples.length; i++) {
@@ -84,10 +84,10 @@ class AudioProcessor {
   trim(audioData, options = {}) {
     const { start = 0, end = 1 } = options;
     const samples = this.bufferToSamples(audioData);
-    
+
     const startIndex = Math.floor(start * samples.length);
     const endIndex = Math.floor(end * samples.length);
-    
+
     const trimmedSamples = samples.slice(startIndex, endIndex);
     return this.samplesToBuffer(trimmedSamples);
   }
@@ -101,7 +101,7 @@ class AudioProcessor {
   fade(audioData, options = {}) {
     const { fadeIn = 0, fadeOut = 0 } = options;
     const samples = this.bufferToSamples(audioData);
-    
+
     if (fadeIn > 0) {
       const fadeInSamples = Math.floor(fadeIn * samples.length);
       for (let i = 0; i < fadeInSamples; i++) {
@@ -132,7 +132,7 @@ class AudioProcessor {
    */
   convert(audioData, options = {}) {
     const { sampleRate = 44100, channels = 2, bitDepth = 16 } = options;
-    
+
     // 这里可以实现采样率转换、声道转换等
     // 简化实现，实际项目中可能需要更复杂的重采样算法
     return audioData;
@@ -159,7 +159,7 @@ class AudioProcessor {
    */
   samplesToBuffer(samples) {
     const buffer = Buffer.alloc(44 + samples.length * 2);
-    
+
     // 写入WAV头部
     buffer.write('RIFF', 0);
     buffer.writeUInt32LE(36 + samples.length * 2, 4);
@@ -174,13 +174,13 @@ class AudioProcessor {
     buffer.writeUInt16LE(16, 34);
     buffer.write('data', 36);
     buffer.writeUInt32LE(samples.length * 2, 40);
-    
+
     // 写入音频数据
     for (let i = 0; i < samples.length; i++) {
       const sample = Math.max(-1, Math.min(1, samples[i]));
       buffer.writeInt16LE(Math.round(sample * 32767), 44 + i * 2);
     }
-    
+
     return buffer;
   }
 
@@ -191,28 +191,28 @@ class AudioProcessor {
    */
   analyze(audioData) {
     const samples = this.bufferToSamples(audioData);
-    
+
     let sum = 0;
     let rms = 0;
     let peak = 0;
-    
+
     for (const sample of samples) {
       sum += sample;
       rms += sample * sample;
       peak = Math.max(peak, Math.abs(sample));
     }
-    
+
     const average = sum / samples.length;
     rms = Math.sqrt(rms / samples.length);
-    
+
     return {
       duration: samples.length / 44100,
       average,
       rms,
       peak,
-      dynamicRange: 20 * Math.log10(peak / (rms || 0.0001))
+      dynamicRange: 20 * Math.log10(peak / (rms || 0.0001)),
     };
   }
 }
 
-module.exports = AudioProcessor; 
+module.exports = AudioProcessor;

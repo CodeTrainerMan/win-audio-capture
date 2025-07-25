@@ -28,6 +28,8 @@ npm install win-audio-capture
 yarn add win-audio-capture
 ```
 
+> **注意**: 此包直接包含源代码。用户可以在 `src/` 目录中查看和修改源代码。
+
 ## 前置要求
 
 - **Windows操作系统**：此库专为Windows系统设计

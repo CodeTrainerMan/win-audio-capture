@@ -1,9 +1,9 @@
 {
   "name": "win-audio-capture",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Windows Desktop Audio Capture JavaScript Plugin Library",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
   "scripts": {
     "build": "webpack --mode production",
     "dev": "webpack --mode development --watch",
@@ -20,7 +20,10 @@
     "diagnose:audio": "node examples/diagnose-audio.js",
     "docs:serve": "npx http-server docs -p 8080 -o",
     "docs:build": "echo 'Documentation is ready in docs/ directory'",
-    "prepublishOnly": "yarn build",
+    "prepublishOnly": "yarn lint",
+    "version:patch": "node scripts/version.js patch",
+    "version:minor": "node scripts/version.js minor",
+    "version:major": "node scripts/version.js major",
     "lint": "eslint src/**/*.js",
     "clean": "rimraf dist",
     "start": "node demo.js",
@@ -51,16 +54,18 @@
     "webpack": "^5.88.2",
     "webpack-cli": "^5.1.4"
   },
-          "dependencies": {
-          "@alicloud/pop-core": "^1.7.12",
-          "alibabacloud-nls": "^1.0.4",
-          "ffmpeg-static": "^5.2.0"
-        },
+  "dependencies": {
+    "@alicloud/pop-core": "^1.7.12",
+    "alibabacloud-nls": "^1.0.4",
+    "ffmpeg-static": "^5.2.0"
+  },
   "files": [
-    "dist",
+    "src",
+    "examples",
     "README.md",
     "README.zh-CN.md",
-    "LICENSE"
+    "LICENSE",
+    "package.json"
   ],
   "repository": {
     "type": "git",

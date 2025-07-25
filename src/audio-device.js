@@ -60,7 +60,7 @@ class AudioDevice {
       isDefault: this.isDefault,
       supportedSampleRates: this.sampleRates,
       supportedChannels: this.channels,
-      supportedBitDepths: this.bitDepths
+      supportedBitDepths: this.bitDepths,
     };
   }
 
@@ -73,4 +73,4 @@ class AudioDevice {
   }
 }
 
-module.exports = AudioDevice; 
+module.exports = AudioDevice;

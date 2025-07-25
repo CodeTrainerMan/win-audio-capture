@@ -240,12 +240,12 @@ npm install win-audio-capture
 
 ### GitHub 克隆
 ```bash
-git clone https://github.com/yourusername/win-audio-capture.git
+git clone https://github.com/CodeTrainerMan/win-audio-capture.git
 ```
 
 ### 在线文档
 ```
-https://yourusername.github.io/win-audio-capture/
+https://CodeTrainerMan.github.io/win-audio-capture/
 ```
 
 ---

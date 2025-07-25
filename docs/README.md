@@ -42,10 +42,10 @@ yarn add win-audio-capture
 
 ## 🔗 Links
 
-- [GitHub Repository](https://github.com/yourusername/win-audio-capture)
+- [GitHub Repository](https://github.com/CodeTrainerMan/win-audio-capture)
 - [NPM Package](https://www.npmjs.com/package/win-audio-capture)
-- [Issues](https://github.com/yourusername/win-audio-capture/issues)
-- [Discussions](https://github.com/yourusername/win-audio-capture/discussions)
+- [Issues](https://github.com/CodeTrainerMan/win-audio-capture/issues)
+- [Discussions](https://github.com/CodeTrainerMan/win-audio-capture/discussions)
 
 ---
 

@@ -1,0 +1,78 @@
+name: Build and Publish to npm
+
+on:
+  push:
+    tags:
+      - 'v*'  # 当推送版本标签时触发
+  workflow_dispatch:  # 允许手动触发
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        registry-url: 'https://registry.npmjs.org'
+        
+    - name: Setup Yarn
+      uses: actions/setup-node@v4
+      with:
+        cache: 'yarn'
+        
+    - name: Install dependencies
+      run: yarn install --frozen-lockfile
+      
+    - name: Build project
+      run: yarn build
+      
+    - name: Run tests
+      run: yarn test
+      
+    - name: Publish to npm
+      run: npm publish
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        
+    - name: Create GitHub Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: |
+          ## 🎉 New Release: ${{ github.ref }}
+          
+          ### 📦 What's New
+          - Windows Desktop Audio Capture JavaScript Plugin Library
+          - Real-time audio processing capabilities
+          - Alibaba Cloud ASR integration
+          - Device detection and recommendation
+          
+          ### 🚀 Installation
+          ```bash
+          npm install win-audio-capture
+          # or
+          yarn add win-audio-capture
+          ```
+          
+          ### 📚 Documentation
+          - [GitHub Repository](https://github.com/CodeTrainerMan/win-audio-capture)
+          - [npm Package](https://www.npmjs.com/package/win-audio-capture)
+          - [GitHub Pages](https://CodeTrainerMan.github.io/win-audio-capture/)
+          
+          ### 🔧 Usage
+          ```javascript
+          const { WinAudioCapture } = require('win-audio-capture');
+          
+          const audioCapture = new WinAudioCapture();
+          const devices = await audioCapture.getDevices();
+          ```
+        draft: false
+        prerelease: false 

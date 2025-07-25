@@ -58,7 +58,7 @@ Both documents include:
 
 The documentation is automatically deployed to GitHub Pages:
 
-- **URL**: `https://yourusername.github.io/win-audio-capture/`
+- **URL**: `https://CodeTrainerMan.github.io/win-audio-capture/`
 - **Source**: `docs/` directory
 - **Deployment**: Automatic via GitHub Actions
 

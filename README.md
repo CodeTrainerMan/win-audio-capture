@@ -21,7 +21,6 @@ A JavaScript library for capturing desktop audio on Windows systems using FFmpeg
 ```bash
 # Using npm
 npm install win-audio-capture
-
 # Using yarn
 yarn add win-audio-capture
 ```

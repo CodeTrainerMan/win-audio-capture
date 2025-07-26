@@ -6,9 +6,7 @@ A JavaScript library for capturing desktop audio on Windows systems using FFmpeg
 
 - [English](README.md) - English documentation
 - [中文](README.zh-CN.md) - Chinese documentation
-
 ---
-
 ## Features
 
 - 🎵 **Desktop Audio Capture**: Capture system audio output in real-time
